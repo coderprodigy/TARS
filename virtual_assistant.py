@@ -15,6 +15,10 @@ import pyttsx3
 import bs4 as bs
 import urllib.request
 
+# NLP imports
+
+import nltk
+
 # pyaudio.PyAudio().open(format=pyaudio.paInt16,
 #                         rate=44100,
 #                         channels=1, #change this to what your sound card supports
@@ -53,7 +57,7 @@ def record_audio(ask=" how are you"):
     with sr.Microphone(device_index=0) as source: # microphone as source
         # if ask:
         #     engine_speak(ask)
-        audio = r.listen(source, 5, 5)  # listen for the audio via source
+        audio = r.listen(source, 10, 10)  # listen for the audio via source
         print("Done Listening")
         voice_data = ''
         try:
@@ -296,4 +300,12 @@ while(1):
     # voice_data= record_userInput("Please type the query")
     print("Done")
     print("Q:", voice_data)
-    respond(voice_data) # respond
+
+    # 1. word tokenize
+    words = nltk.word_tokenize(voice_data)
+    print(words)
+
+
+
+
+    # respond(voice_data) # respond

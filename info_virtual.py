@@ -15,6 +15,21 @@ import pyttsx3
 import bs4 as bs #Beautiful Soup is a library that makes it easy to scrape information from web pages. 
 import urllib.request #The urllib.request module defines functions and classes which help in opening URLs (mostly HTTP) in a complex world — basic and digest authentication, redirections, cookies and more.
 #import wikipedia
+
+# NLP imports
+
+import nltk
+# nltk.download('punkt')
+
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+# nltk.download('wordnet')
+from nltk.corpus import wordnet
+
+# nltk.download(“stopwords”)
+# from nltk.corpus import stopwords
+
+import re
+
 class person:
     name=''
     def setName(self,name):
@@ -115,7 +130,7 @@ def respond(voice_data):
         engine_speak(time)
         
     #5))search google
-    if there_exists(["search for"]) and 'youtube' not in voice_data:
+    if there_exists(["search for", "who"]) and 'google' not in voice_data:
         search_term=voice_data.split("for")[-1]
         url = "https://google.com/search?q=" + search_term
         webbrowser.get().open(url)
@@ -124,9 +139,12 @@ def respond(voice_data):
     #6))) search youtube
     if there_exists(["search for youtube for","youtube"]):
         search_term=voice_data.split("for")[-1]
+        print("search term is " ,search_term)
         url="https://www.youtube.com/results?search_query="+ search_term
         webbrowser.get().open(url)
         engine_speak("Here is what i found for "+ search_term + "on youtube")
+
+        
         
     #7)) time table
     if there_exists(["show me my time table"]):
@@ -248,4 +266,35 @@ while(1):
     voice_data= record_userInput("Please type the query")
     print("Done")
     print("Q:", voice_data)
+    
+
+
+    # 1. remove punctuation from string
+    updated_string = re.sub(r'[^\w\s]', '', voice_data)
+    print("output of regular expression", updated_string)
+
+
+   # 2. word tokenize
+    words_tokens = nltk.word_tokenize(updated_string)
+    # print("output of tokenisation", words_tokens)
+
+    #3. lemmatizer
+
+    lemmatizer = WordNetLemmatizer()
+    # stemmer = PorterStemmer()
+
+    lemmatized_output = [lemmatizer.lemmatize(w) for w in words_tokens]
+    print("output of lemmatization", lemmatized_output)
+
+    # skipped stop word removal for now as it doesn't make sense for a couple of features
+
+
     respond(voice_data) # respond
+    
+
+
+
+
+
+
+
