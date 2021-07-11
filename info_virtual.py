@@ -24,11 +24,33 @@ import nltk
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 # nltk.download('wordnet')
 from nltk.corpus import wordnet
-
+import re
 # nltk.download(“stopwords”)
 # from nltk.corpus import stopwords
 
-import re
+
+# listSimilarity to compare the voice data with every fxn's list
+
+
+#CREATING A GLOBAL MAXIMUM_VAL TO STORE THE INDEX OF SELECTED FUNCTION
+
+selectedFxnIndex=-1
+
+def listSimilarity(fxn_data,index, voice_data):
+    # max value of count till now
+    maxCount= 0
+    simList= list(set(fxn_data) & set(voice_data))
+    # count of similar elements in both the lists
+    count= simList.size()
+    if(count>maxCount):
+        selectedFxnIndex= index
+        maxCount= count
+
+    return index
+
+
+
+
 
 class person:
     name=''
@@ -90,12 +112,55 @@ def engine_speak(audio_string):
     print(asis_obj.name +":",audio_string)#print what app said
     os.remove(audio_file)#remove the audio file ##let us check at last by comenting it whether it says
     
+# greeting fxn
+def greeting():
+
+    ind= 1
+    l1= ['hey','hi','hola','hello','wassup']
+    return ind, l1
+
+def playYoutube():
+
+    # change ind to 6 later on
+    ind= 2
+    l6= (["search for youtube for","youtube"])
+    return ind, l6
+
+
+       
+
 def respond(voice_data):
-    # 1) if got greeting
-    if there_exists(['hey','hi','hola','hello','wassup',]):
+
+    # greetings
+    ind1,l1= greeting()
+    # index variable to check if this function will be executed or not
+    finalIndex= listSimilarity(l1,ind1,lemmatized_output)
+
+    if(finalIndex== ind1):
         greetings=["Hi sir, What we gonna do today?" +person_obj.name, "Hi sir, what are we doing today?" +person_obj.name, "Hi sir, How can i help you?"+person_obj.name]
         greet=greetings[random.randint(0,len(greetings)-1)]
         engine_speak(greet)
+
+
+    #youtube (temporary)
+    ind2,l2= playYoutube()
+    # index variable to check if this function will be executed or not
+    finalIndex= listSimilarity(l2,ind2,lemmatized_output)
+
+    if(finalIndex== ind2):
+        search_term=voice_data.split("for")[-1]
+        print("search term is " ,search_term)
+        url="https://www.youtube.com/results?search_query="+ search_term
+        webbrowser.get().open(url)
+        engine_speak("Here is what i found for "+ search_term + "on youtube")
+
+    
+
+    # # 1) if got greeting
+    # if there_exists(['hey','hi','hola','hello','wassup',]):
+    #     greetings=["Hi sir, What we gonna do today?" +person_obj.name, "Hi sir, what are we doing today?" +person_obj.name, "Hi sir, How can i help you?"+person_obj.name]
+    #     greet=greetings[random.randint(0,len(greetings)-1)]
+    #     engine_speak(greet)
         
     #2))name
     if there_exists(["whta is your name","what's your name","tell me your name"]):
@@ -290,6 +355,8 @@ while(1):
 
 
     respond(voice_data) # respond
+
+    
     
 
 
